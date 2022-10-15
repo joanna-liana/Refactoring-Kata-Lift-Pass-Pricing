@@ -25,15 +25,6 @@ describe('prices', () => {
   });
 
   describe('day time cost', () => {
-    it('does something', async () => {
-
-      const response = await request(app)
-        .get('/prices?type=1jour');
-
-      var expectedResult = { cost: 35 }; // change this to make the test pass
-      expect(response.body).deep.equal(expectedResult);
-    });
-
     describe('on the first day of the week (non-holiday)', async () => {
       const FIRST_DAY_OF_WEEK = "2022-01-03";
 
