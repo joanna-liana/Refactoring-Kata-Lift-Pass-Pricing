@@ -23,7 +23,7 @@ async function createApp() {
     const passRepository = new MysqlPassRepository(connection);
     const holidaysRepository = new MysqlHolidaysRepository(connection);
 
-    const result = await calculatePassPriceWithoutRes({ passRepository, holidaysRepository }, req.query as unknown as PassPriceParams);
+    const result = await calculatePassPrice({ passRepository, holidaysRepository }, req.query as unknown as PassPriceParams);
 
     res.json(result);
   });
@@ -44,70 +44,6 @@ interface PassPriceDependencies {
 }
 
 async function calculatePassPrice(
-  res,
-  { passRepository, holidaysRepository }: PassPriceDependencies,
-  params: PassPriceParams,
-) {
-  const { type, age, date }: PassPriceParams = params;
-
-  const result = await passRepository.getByType(type);
-
-  if (age as any < 6) {
-    res.json({ cost: 0 });
-  } else {
-    if (type !== 'night') {
-      const holidays = await holidaysRepository.getAll();
-
-      let isHoliday;
-      let reduction = 0;
-      for (let row of holidays) {
-        let holiday = row.holiday;
-        let d = new Date(date as string);
-        if (d.getFullYear() === holiday.getFullYear()
-          && d.getMonth() === holiday.getMonth()
-          && d.getDate() === holiday.getDate()) {
-
-          isHoliday = true;
-        }
-
-      }
-
-      if (!isHoliday && new Date(date as string).getDay() === 1) {
-        reduction = 35;
-      }
-
-      // TODO apply reduction for others
-      if (age as any < 15) {
-        res.json({ cost: Math.ceil(result.cost * .7) });
-      } else {
-        if (age === undefined) {
-          let cost = result.cost * (1 - reduction / 100);
-          res.json({ cost: Math.ceil(cost) });
-        } else {
-          if (age as any > 64) {
-            let cost = result.cost * .75 * (1 - reduction / 100);
-            res.json({ cost: Math.ceil(cost) });
-          } else {
-            let cost = result.cost * (1 - reduction / 100);
-            res.json({ cost: Math.ceil(cost) });
-          }
-        }
-      }
-    } else {
-      if (age as any >= 6) {
-        if (age as any > 64) {
-          res.json({ cost: Math.ceil(result.cost * .4) });
-        } else {
-          res.json(result);
-        }
-      } else {
-        res.json({ cost: 0 });
-      }
-    }
-  }
-}
-
-async function calculatePassPriceWithoutRes(
   { passRepository, holidaysRepository }: PassPriceDependencies,
   params: PassPriceParams,
 ) {
