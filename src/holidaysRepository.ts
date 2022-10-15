@@ -1,7 +1,11 @@
 import mysql from "mysql2/promise";
 
+interface HolidayReadModel {
+  holiday: Date;
+}
+
 export interface HolidaysRepository {
-  getAll(): Promise<unknown>;
+  getAll(): Promise<HolidayReadModel[]>;
 }
 
 export class MysqlHolidaysRepository implements HolidaysRepository {
@@ -11,6 +15,6 @@ export class MysqlHolidaysRepository implements HolidaysRepository {
   async getAll() {
     return (await this.connection.query(
       'SELECT * FROM `holidays`'
-    ))[0] as mysql.RowDataPacket[];
+    ))[0] as HolidayReadModel[];
   }
 }
