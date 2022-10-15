@@ -73,6 +73,46 @@ describe('prices', () => {
         expect(response.body).deep.equal(expectedResult);
       });
     });
+
+    describe('on a non-first day of the week (non-holiday)', async () => {
+      const NON_FIRST_DAY_OF_WEEK = "2022-01-04";
+
+      it('given no age', async () => {
+        const response = await request(app)
+          .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK}`);
+
+        var expectedResult = { cost: 35 };
+
+        expect(response.body).deep.equal(expectedResult);
+      });
+
+      it('given age below threshold', async () => {
+        const response = await request(app)
+          .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK}&age=63`);
+
+        var expectedResult = { cost: 35 };
+
+        expect(response.body).deep.equal(expectedResult);
+      });
+
+      it('given age equal to threshold', async () => {
+        const response = await request(app)
+          .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK}&age=64`);
+
+        var expectedResult = { cost: 35 };
+
+        expect(response.body).deep.equal(expectedResult);
+      });
+
+      it('given age above threshold', async () => {
+        const response = await request(app)
+          .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK}&age=65`);
+
+        var expectedResult = { cost: 27 };
+
+        expect(response.body).deep.equal(expectedResult);
+      });
+    });
   });
 
   describe('night time cost', async () => {
