@@ -42,6 +42,23 @@ describe('prices', () => {
       });
     });
 
+    describe('for ages equal to the first threshold on any date', () => {
+      [
+        { date: "2022-01-03", caseName: 'the first day of the week', cost: 23 },
+        { date: "2022-01-02", caseName: 'a non-first day of the week', cost: 35 },
+        { date: undefined, caseName: 'date unspecificed', cost: 35 }
+      ].forEach(({ date, caseName, cost }) => {
+        it(caseName, async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${date}&age=15`);
+
+          var expectedResult = { cost };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+      });
+    });
+
     describe('on the first day of the week (non-holiday)', async () => {
       const FIRST_DAY_OF_WEEK = "2022-01-03";
 
