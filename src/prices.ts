@@ -23,7 +23,7 @@ async function createApp() {
     const passRepository = new MysqlPassRepository(connection);
     const holidaysRepository = new MysqlHolidaysRepository(connection);
 
-    await calculatePassPrice(connection, req, res, { passRepository, holidaysRepository });
+    await calculatePassPrice(req, res, { passRepository, holidaysRepository });
   });
   return { app, connection };
 }
@@ -31,7 +31,6 @@ async function createApp() {
 export { createApp };
 
 async function calculatePassPrice(
-  connection: mysql.Connection,
   req,
   res,
   { passRepository, holidaysRepository }: {
