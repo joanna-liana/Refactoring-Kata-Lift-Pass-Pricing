@@ -38,7 +38,7 @@ async function calculatePassPrice(
     holidaysRepository: HolidaysRepository;
   }
 ) {
-  const { type, age } = req.query;
+  const { type, age, date } = req.query;
 
   const result = await passRepository.getByType(type);
 
@@ -52,7 +52,7 @@ async function calculatePassPrice(
       let reduction = 0;
       for (let row of holidays) {
         let holiday = row.holiday;
-        let d = new Date(req.query.date as string);
+        let d = new Date(date as string);
         if (d.getFullYear() === holiday.getFullYear()
           && d.getMonth() === holiday.getMonth()
           && d.getDate() === holiday.getDate()) {
@@ -62,7 +62,7 @@ async function calculatePassPrice(
 
       }
 
-      if (!isHoliday && new Date(req.query.date as string).getDay() === 1) {
+      if (!isHoliday && new Date(date as string).getDay() === 1) {
         reduction = 35;
       }
 
