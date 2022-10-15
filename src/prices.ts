@@ -30,15 +30,23 @@ async function createApp() {
 
 export { createApp };
 
+interface PassPriceParams {
+  type: string;
+  age: number;
+  date: string;
+}
+
+interface PassPriceDependencies {
+  passRepository: PassRepository;
+  holidaysRepository: HolidaysRepository;
+}
+
 async function calculatePassPrice(
   req,
   res,
-  { passRepository, holidaysRepository }: {
-    passRepository: PassRepository,
-    holidaysRepository: HolidaysRepository;
-  }
+  { passRepository, holidaysRepository }: PassPriceDependencies,
 ) {
-  const { type, age, date }: { type: string, age: number, date: string; } = req.query;
+  const { type, age, date }: PassPriceParams = req.query;
 
   const result = await passRepository.getByType(type);
 
