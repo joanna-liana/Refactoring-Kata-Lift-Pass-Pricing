@@ -121,6 +121,101 @@ describe('prices', () => {
         expect(response.body).deep.equal(expectedResult);
       });
     });
+
+    describe('on a holiday date', () => {
+      describe('on the first day of the week', async () => {
+        const FIRST_DAY_OF_WEEK_HOLIDAY = "2019-02-18";
+
+        it('given no age', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${FIRST_DAY_OF_WEEK_HOLIDAY}`);
+
+          var expectedResult = { cost: 35 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+
+        it('given age below threshold', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${FIRST_DAY_OF_WEEK_HOLIDAY}&age=63`);
+
+          var expectedResult = { cost: 35 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+
+        it('given age equal to threshold', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${FIRST_DAY_OF_WEEK_HOLIDAY}&age=64`);
+
+          var expectedResult = { cost: 35 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+
+        it('given age above threshold', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${FIRST_DAY_OF_WEEK_HOLIDAY}&age=65`);
+
+          var expectedResult = { cost: 27 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+      });
+
+      describe('on a non-first day of the week', async () => {
+        const NON_FIRST_DAY_OF_WEEK_HOLIDAY = "2019-02-19";
+
+        beforeEach(async () => {
+          await connection.query(
+            "DELETE FROM lift_pass.holidays WHERE holiday = ?;",
+            [NON_FIRST_DAY_OF_WEEK_HOLIDAY]
+          );
+
+          await connection.query(
+            "INSERT INTO lift_pass.holidays (holiday, description) VALUES (?, 'TEST');",
+            [NON_FIRST_DAY_OF_WEEK_HOLIDAY]
+          );
+        });
+
+        it('given no age', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK_HOLIDAY}`);
+
+          var expectedResult = { cost: 35 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+
+        it('given age below threshold', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK_HOLIDAY}&age=63`);
+
+          var expectedResult = { cost: 35 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+
+        it('given age equal to threshold', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK_HOLIDAY}&age=64`);
+
+          var expectedResult = { cost: 35 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+
+        it('given age above threshold', async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${NON_FIRST_DAY_OF_WEEK_HOLIDAY}&age=65`);
+
+          var expectedResult = { cost: 27 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+      });
+    });
+
   });
 
   describe('night time cost', async () => {
