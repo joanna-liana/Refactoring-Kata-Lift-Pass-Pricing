@@ -47,7 +47,7 @@ async function calculatePassPrice(
   { passRepository, holidaysRepository }: PassPriceDependencies,
   params: PassPriceParams,
 ) {
-  const { type, age, date }: PassPriceParams = req.query;
+  const { type, age, date }: PassPriceParams = params;
 
   const result = await passRepository.getByType(type);
 
