@@ -24,11 +24,9 @@ async function createApp() {
 }
 
 export { createApp };
+
 async function calculatePassPrice(connection: mysql.Connection, req, res) {
-  const result = (await connection.query(
-    'SELECT cost FROM `base_price` ' +
-    'WHERE `type` = ? ',
-    [req.query.type]))[0][0];
+  const result = await getPassByType(connection, req);
 
   if (req.query.age as any < 6) {
     res.json({ cost: 0 });
@@ -85,4 +83,10 @@ async function calculatePassPrice(connection: mysql.Connection, req, res) {
       }
     }
   }
+}
+async function getPassByType(connection: mysql.Connection, req: any) {
+  return (await connection.query(
+    'SELECT cost FROM `base_price` ' +
+    'WHERE `type` = ? ',
+    [req.query.type]))[0][0];
 }
