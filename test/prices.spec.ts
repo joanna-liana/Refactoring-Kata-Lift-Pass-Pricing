@@ -32,4 +32,15 @@ describe('prices', () => {
 
     expect(response.body).deep.equal(expectedResult);
   });
+
+  describe('fetches night type data', async () => {
+    it('given no age', async () => {
+      const response = await request(app)
+        .get('/prices?type=night');
+
+      var expectedResult = { cost: 0 };
+
+      expect(response.body).deep.equal(expectedResult);
+    });
+  });
 });
