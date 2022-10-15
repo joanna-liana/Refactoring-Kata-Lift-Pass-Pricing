@@ -33,7 +33,7 @@ async function calculatePassPrice(connection: mysql.Connection, req, res) {
     res.json({ cost: 0 });
   } else {
     if (req.query.type !== 'night') {
-      const holidays = await new MysqlHolidaysRepository(connection).getHolidays();
+      const holidays = await new MysqlHolidaysRepository(connection).getAll();
 
       let isHoliday;
       let reduction = 0;
