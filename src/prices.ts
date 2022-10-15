@@ -32,9 +32,7 @@ async function calculatePassPrice(connection: mysql.Connection, req, res) {
     res.json({ cost: 0 });
   } else {
     if (req.query.type !== 'night') {
-      const holidays = (await connection.query(
-        'SELECT * FROM `holidays`'
-      ))[0] as mysql.RowDataPacket[];
+      const holidays = await getHolidays(connection);
 
       let isHoliday;
       let reduction = 0;
@@ -84,6 +82,12 @@ async function calculatePassPrice(connection: mysql.Connection, req, res) {
     }
   }
 }
+async function getHolidays(connection: mysql.Connection) {
+  return (await connection.query(
+    'SELECT * FROM `holidays`'
+  ))[0] as mysql.RowDataPacket[];
+}
+
 async function getPassByType(connection: mysql.Connection, type: string) {
   return (await connection.query(
     'SELECT cost FROM `base_price` ' +
