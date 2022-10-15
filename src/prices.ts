@@ -1,5 +1,6 @@
 import express from "express";
 import mysql from "mysql2/promise";
+import { getPassByType } from './passRepository';
 import { MysqlHolidaysRepository } from './holidaysRepository';
 
 async function createApp() {
@@ -82,10 +83,4 @@ async function calculatePassPrice(connection: mysql.Connection, req, res) {
       }
     }
   }
-}
-async function getPassByType(connection: mysql.Connection, type: string) {
-  return (await connection.query(
-    'SELECT cost FROM `base_price` ' +
-    'WHERE `type` = ? ',
-    [type]))[0][0];
 }
