@@ -25,6 +25,23 @@ describe('prices', () => {
   });
 
   describe('day time cost', () => {
+    describe('for ages below the first threshold on any date', () => {
+      [
+        { date: "2022-01-03", caseName: 'the first day of the week' },
+        { date: "2022-01-02", caseName: 'a non-first day of the week' },
+        { date: undefined, caseName: 'date unspecificed' }
+      ].forEach(({ date, caseName }) => {
+        it(caseName, async () => {
+          const response = await request(app)
+            .get(`/prices?type=1jour&date=${date}&age=14`);
+
+          var expectedResult = { cost: 25 };
+
+          expect(response.body).deep.equal(expectedResult);
+        });
+      });
+    });
+
     describe('on the first day of the week (non-holiday)', async () => {
       const FIRST_DAY_OF_WEEK = "2022-01-03";
 
