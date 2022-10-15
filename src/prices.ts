@@ -23,7 +23,7 @@ async function createApp() {
     const passRepository = new MysqlPassRepository(connection);
     const holidaysRepository = new MysqlHolidaysRepository(connection);
 
-    await calculatePassPrice(req, res, { passRepository, holidaysRepository });
+    await calculatePassPrice(req, res, { passRepository, holidaysRepository }, req.query as unknown as PassPriceParams);
   });
   return { app, connection };
 }
@@ -45,6 +45,7 @@ async function calculatePassPrice(
   req,
   res,
   { passRepository, holidaysRepository }: PassPriceDependencies,
+  params: PassPriceParams,
 ) {
   const { type, age, date }: PassPriceParams = req.query;
 
