@@ -38,11 +38,11 @@ async function calculatePassPrice(
     holidaysRepository: HolidaysRepository;
   }
 ) {
-  const { type } = req.query;
+  const { type, age } = req.query;
 
   const result = await passRepository.getByType(type);
 
-  if (req.query.age as any < 6) {
+  if (age as any < 6) {
     res.json({ cost: 0 });
   } else {
     if (type !== 'night') {
@@ -67,14 +67,14 @@ async function calculatePassPrice(
       }
 
       // TODO apply reduction for others
-      if (req.query.age as any < 15) {
+      if (age as any < 15) {
         res.json({ cost: Math.ceil(result.cost * .7) });
       } else {
-        if (req.query.age === undefined) {
+        if (age === undefined) {
           let cost = result.cost * (1 - reduction / 100);
           res.json({ cost: Math.ceil(cost) });
         } else {
-          if (req.query.age as any > 64) {
+          if (age as any > 64) {
             let cost = result.cost * .75 * (1 - reduction / 100);
             res.json({ cost: Math.ceil(cost) });
           } else {
@@ -84,8 +84,8 @@ async function calculatePassPrice(
         }
       }
     } else {
-      if (req.query.age as any >= 6) {
-        if (req.query.age as any > 64) {
+      if (age as any >= 6) {
+        if (age as any > 64) {
           res.json({ cost: Math.ceil(result.cost * .4) });
         } else {
           res.json(result);
