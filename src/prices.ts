@@ -1,5 +1,6 @@
 import express from "express";
 import mysql from "mysql2/promise";
+import { getHolidays, MysqlHolidaysRepository } from './holidaysRepository';
 
 async function createApp() {
   const app = express();
@@ -32,7 +33,7 @@ async function calculatePassPrice(connection: mysql.Connection, req, res) {
     res.json({ cost: 0 });
   } else {
     if (req.query.type !== 'night') {
-      const holidays = await getHolidays(connection);
+      const holidays = await new MysqlHolidaysRepository(connection).getHolidays();
 
       let isHoliday;
       let reduction = 0;
@@ -82,12 +83,6 @@ async function calculatePassPrice(connection: mysql.Connection, req, res) {
     }
   }
 }
-async function getHolidays(connection: mysql.Connection) {
-  return (await connection.query(
-    'SELECT * FROM `holidays`'
-  ))[0] as mysql.RowDataPacket[];
-}
-
 async function getPassByType(connection: mysql.Connection, type: string) {
   return (await connection.query(
     'SELECT cost FROM `base_price` ' +
