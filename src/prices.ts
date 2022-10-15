@@ -1,6 +1,6 @@
 import express from "express";
 import mysql from "mysql2/promise";
-import { getPassByType } from './passRepository';
+import { MysqlPassRepository } from './passRepository';
 import { MysqlHolidaysRepository } from './holidaysRepository';
 
 async function createApp() {
@@ -28,7 +28,7 @@ async function createApp() {
 export { createApp };
 
 async function calculatePassPrice(connection: mysql.Connection, req, res) {
-  const result = await getPassByType(connection, req.query.type);
+  const result = await new MysqlPassRepository(connection).getByType(req.query.type);
 
   if (req.query.age as any < 6) {
     res.json({ cost: 0 });
