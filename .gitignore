@@ -1,2 +1,15 @@
+node_modules/
+npm-debug.log
+package-lock.json
+typings
+
 .idea
-.DS_Store
+
+src/*.js
+test/*.js
+*.js.map
+tsconfig.tsbuildinfo
+
+dist/
+coverage/
+.nyc_output/

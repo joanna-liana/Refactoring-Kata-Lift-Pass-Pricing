@@ -63,9 +63,9 @@ Now the HTTP layer and the integration of the parts can be tested with very few 
 
 ## CONTRIBUTING
 
-There are two branches, the master branch and the with_tests branch. The master is always merged into the with_tests branch. 
-So typically if you want to contribute a new language or a *simple* version of a language you typically change the master branch, 
-then switch to the with_tests branch and  merge with  master, then add tests. 
+There are two branches, the master branch and the with_tests branch. The master is always merged into the with_tests branch.
+So typically if you want to contribute a new language or a *simple* version of a language you typically change the master branch,
+then switch to the with_tests branch and  merge with  master, then add tests.
 
 Note that there are github actions for most of the with_tests versions, please do provide one if you add a language. This allows
 anyone having trouble running the tests with a baseline for getting the tests to work
@@ -73,3 +73,23 @@ anyone having trouble running the tests with a baseline for getting the tests to
 When you're ready please submit one pull request for each branch
 
 Thanks for contributing!
+
+## Lift Pass Pricing TypeScript API
+
+Lift Pass Pricing Refactoring Kata.
+
+This is a [Node.js](https://nodejs.org/en/) project. Have [npm](https://www.npmjs.com/) in your path, verify using `npm --version`.
+
+To install dependencies:
+
+    npm install
+
+The project uses [Mocha](https://mochajs.org/), [Chai](https://www.chaijs.com/) and [SuperTest](https://github.com/visionmedia/supertest) for testing.
+
+To run the tests:
+
+    npm test
+
+To start the application:
+
+    npm start
