@@ -42,5 +42,23 @@ describe('prices', () => {
 
       expect(response.body).deep.equal(expectedResult);
     });
+
+    it('given an age matching the first threshold', async () => {
+      const response = await request(app)
+        .get('/prices?type=night&age=6');
+
+      var expectedResult = { cost: 19 };
+
+      expect(response.body).deep.equal(expectedResult);
+    });
+
+    it('given an age above the first threshold', async () => {
+      const response = await request(app)
+        .get('/prices?type=night&age=7');
+
+      var expectedResult = { cost: 19 };
+
+      expect(response.body).deep.equal(expectedResult);
+    });
   });
 });
