@@ -264,4 +264,44 @@ describe('prices', () => {
       expect(response.body).deep.equal(expectedResult);
     });
   });
+
+  describe('update', () => {
+    const TYPE_TO_UPDATE = "testType";
+    const INITIAL_COST = 100;
+    const UPDATED_COST = 150;
+
+    beforeEach(async () => {
+      await connection.query(
+        "DELETE FROM lift_pass.base_price WHERE type = ?;",
+        [TYPE_TO_UPDATE]
+      );
+
+      await connection.query(
+        "INSERT INTO lift_pass.base_price (type, cost) VALUES (?, ?);",
+        [TYPE_TO_UPDATE, INITIAL_COST]
+      );
+    });
+
+    it('updates the lift type cost', async () => {
+      // given
+      const { body: resultBeforeUpdate } = await request(app)
+        .get(`/prices?type=${TYPE_TO_UPDATE}`);
+
+      var expectedResult = { cost: INITIAL_COST };
+
+      expect(resultBeforeUpdate).deep.equal(expectedResult);
+
+      // when
+      await request(app)
+        .put(`/prices?type=${TYPE_TO_UPDATE}&cost=${UPDATED_COST}`);
+
+      // given
+      const { body: resultAfterUpdate } = await request(app)
+        .get(`/prices?type=${TYPE_TO_UPDATE}`);
+
+      var expectedResult = { cost: UPDATED_COST };
+
+      expect(resultAfterUpdate).deep.equal(expectedResult);
+    });
+  });
 });
