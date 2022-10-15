@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import mysql from "mysql2/promise";
 import { MysqlPassRepository, PassRepository } from './passRepository';
 import { HolidaysRepository, MysqlHolidaysRepository } from './holidaysRepository';
@@ -23,7 +23,9 @@ async function createApp() {
     const passRepository = new MysqlPassRepository(connection);
     const holidaysRepository = new MysqlHolidaysRepository(connection);
 
-    await calculatePassPrice(res, { passRepository, holidaysRepository }, req.query as unknown as PassPriceParams);
+    const result = await calculatePassPriceWithoutRes({ passRepository, holidaysRepository }, req.query as unknown as PassPriceParams);
+
+    res.json(result);
   });
   return { app, connection };
 }
