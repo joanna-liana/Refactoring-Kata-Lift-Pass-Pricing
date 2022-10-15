@@ -1,6 +1,6 @@
 import express from "express";
 import mysql from "mysql2/promise";
-import { getHolidays, MysqlHolidaysRepository } from './holidaysRepository';
+import { MysqlHolidaysRepository } from './holidaysRepository';
 
 async function createApp() {
   const app = express();
