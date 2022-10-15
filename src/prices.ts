@@ -1,7 +1,7 @@
 import express from "express";
 import mysql from "mysql2/promise";
-import { MysqlPassRepository } from './passRepository';
-import { MysqlHolidaysRepository } from './holidaysRepository';
+import { MysqlPassRepository, PassRepository } from './passRepository';
+import { HolidaysRepository, MysqlHolidaysRepository } from './holidaysRepository';
 
 async function createApp() {
   const app = express();
@@ -20,14 +20,25 @@ async function createApp() {
     res.json();
   });
   app.get('/prices', async (req, res) => {
-    await calculatePassPrice(connection, req, res);
+    const passRepository = new MysqlPassRepository(connection);
+    const holidaysRepository = new MysqlHolidaysRepository(connection);
+
+    await calculatePassPrice(connection, req, res, { passRepository, holidaysRepository });
   });
   return { app, connection };
 }
 
 export { createApp };
 
-async function calculatePassPrice(connection: mysql.Connection, req, res) {
+async function calculatePassPrice(
+  connection: mysql.Connection,
+  req,
+  res,
+  { passRepository, holidaysRepository }: {
+    passRepository: PassRepository,
+    holidaysRepository: HolidaysRepository;
+  }
+) {
   const result = await new MysqlPassRepository(connection).getByType(req.query.type);
 
   if (req.query.age as any < 6) {
