@@ -1,6 +1,7 @@
 node_modules/
 npm-debug.log
 package-lock.json
+yarn.lock
 typings
 
 .idea
@@ -13,3 +14,6 @@ tsconfig.tsbuildinfo
 dist/
 coverage/
 .nyc_output/
+
+# stryker temp files
+.stryker-tmp
