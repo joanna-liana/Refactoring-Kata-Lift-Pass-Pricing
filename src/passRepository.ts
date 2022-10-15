@@ -1,7 +1,7 @@
 import mysql from "mysql2/promise";
 
 export interface PassRepository {
-  getByType(type: string): Promise<unknown>;
+  getByType(type: string): Promise<{ cost: number; }>;
 }
 
 export class MysqlPassRepository implements PassRepository {
