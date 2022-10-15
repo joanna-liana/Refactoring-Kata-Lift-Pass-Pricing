@@ -39,13 +39,13 @@ async function calculatePassPrice(
     holidaysRepository: HolidaysRepository;
   }
 ) {
-  const result = await new MysqlPassRepository(connection).getByType(req.query.type);
+  const result = await passRepository.getByType(req.query.type);
 
   if (req.query.age as any < 6) {
     res.json({ cost: 0 });
   } else {
     if (req.query.type !== 'night') {
-      const holidays = await new MysqlHolidaysRepository(connection).getAll();
+      const holidays = await holidaysRepository.getAll();
 
       let isHoliday;
       let reduction = 0;
