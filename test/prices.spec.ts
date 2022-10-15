@@ -33,7 +33,7 @@ describe('prices', () => {
     expect(response.body).deep.equal(expectedResult);
   });
 
-  describe('fetches night type data', async () => {
+  describe('night time cost', async () => {
     it('given no age', async () => {
       const response = await request(app)
         .get('/prices?type=night');
