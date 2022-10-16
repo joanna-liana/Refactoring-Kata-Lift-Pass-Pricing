@@ -10,6 +10,9 @@ async function createApp() {
   let connectionOptions = { host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql' };
   const connection = await mysql.createConnection(connectionOptions);
 
+  const passRepository = new MysqlPassRepository(connection);
+  const holidaysRepository = new MysqlHolidaysRepository(connection);
+
   app.put('/prices', async (req, res) => {
     const liftPassCost = req.query.cost;
     const liftPassType = req.query.type;
@@ -21,9 +24,6 @@ async function createApp() {
     res.json();
   });
   app.get('/prices', async (req, res) => {
-    const passRepository = new MysqlPassRepository(connection);
-    const holidaysRepository = new MysqlHolidaysRepository(connection);
-
     const result = await calculatePassPrice({ passRepository, holidaysRepository }, req.query as unknown as PassPriceParams);
 
     res.json(result);
