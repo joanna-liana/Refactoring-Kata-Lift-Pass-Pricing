@@ -284,6 +284,43 @@ describe('prices', () => {
     });
   });
 
+  describe('multiple pass price', () => {
+    it("returns prices of multiple passes", async () => {
+      // given
+      const NIGHT_TYPE = 'night';
+      const DAY_TYPE = '1jour';
+
+      const FIRST_DAY_OF_WEEK = "2022-01-03";
+      const NON_FIRST_DAY_OF_WEEK_HOLIDAY = "2019-02-19";
+
+      const AGE_ABOVE_YOUNGSTER_THRESHOLD = 7;
+      const AGE_ABOVE_SENIOR_THRESHOLD = 65;
+
+      // when
+      const response = await request(app)
+        .post(`/prices`)
+        .send({
+          passes: [
+            {
+              type: DAY_TYPE,
+              date: FIRST_DAY_OF_WEEK,
+              age: AGE_ABOVE_YOUNGSTER_THRESHOLD,
+            },
+            {
+              type: NIGHT_TYPE,
+              date: NON_FIRST_DAY_OF_WEEK_HOLIDAY,
+              age: AGE_ABOVE_SENIOR_THRESHOLD,
+            }
+          ]
+        });
+
+      // then
+      var expectedResult = [{ cost: 0 }, { cost: 0 }];
+
+      expect(response.body).deep.equal(expectedResult);
+    });
+  });
+
   describe('update', () => {
     const TYPE_TO_UPDATE = "testType";
     const INITIAL_COST = 100;
