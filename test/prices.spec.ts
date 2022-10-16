@@ -315,7 +315,7 @@ describe('prices', () => {
         });
 
       // then
-      var expectedResult = [{ cost: 0 }, { cost: 0 }];
+      var expectedResult = { result: [{ cost: 25 }, { cost: 8 }] };
 
       expect(response.body).deep.equal(expectedResult);
     });

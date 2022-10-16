@@ -7,6 +7,8 @@ import { calculatePassPrice, PassPriceParams } from './passPriceCalculator';
 async function createApp() {
   const app = express();
 
+  app.use(express.json());
+
   let connectionOptions = { host: 'localhost', user: 'root', database: 'lift_pass', password: 'mysql' };
   const connection = await mysql.createConnection(connectionOptions);
 
@@ -23,11 +25,25 @@ async function createApp() {
 
     res.json();
   });
+
   app.get('/prices', async (req, res) => {
     const result = await calculatePassPrice({ passRepository, holidaysRepository }, req.query as unknown as PassPriceParams);
 
     res.json(result);
   });
+
+  app.post('/prices', async (req, res) => {
+    const multiPassParams = req.body?.passes as unknown as PassPriceParams[];
+
+    const result = await Promise.all(
+      multiPassParams
+        .map(params => calculatePassPrice({ passRepository, holidaysRepository }, params)
+        )
+    );
+
+    res.json({ result });
+  });
+
   return { app, connection };
 }
 
